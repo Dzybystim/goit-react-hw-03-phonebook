@@ -54,8 +54,24 @@ getVisibleFilter = () => {
   return this.state.contacts.filter(contact => contact.text.toLowerCase().includes(normalize))
 }
 
+//////////////////При монтировании странички смотрим что есть в локальном хранилище и берем оттуда данные для отрисовки
+componentDidMount() {
+  const contacts = localStorage.getItem('contacts')
+  const parseContacts = JSON.parse(contacts)
+  if(parseContacts){
+  this.setState({contacts: parseContacts})}
+  
+}
+/////////////////Сравниваем контакты до обновления и после , если изминения есть записываем в локальное хранилище
+componentDidUpdate(_, prevState) {
+  if(this.state.contacts.length !== prevState.contacts.length){
+  localStorage.setItem('contacts', JSON.stringify(this.state.contacts))
+}
+  
+}
+
   render() {
-///////////////////Отфитрованные контакты по фильтру
+///////////////////Отфильтрованные контакты по фильтру
   const visibleFilter = this.getVisibleFilter()
 
   return (
